@@ -1,7 +1,7 @@
 # Rmailer
 Send mails from R via smtp with encryption and authentication
 
-# Installation
+## Installation
 
 Rmailer is based on libcurl. Therefore, make sure to have libcurl installed (including an ssl library).
 
@@ -19,7 +19,7 @@ install_github("christophrust/Rmailer")
 ```
 
 
-# Example
+## Example
 
 ```splus
 library(Rmailer)

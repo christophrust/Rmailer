@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# configure script for Rmailer, code based on configure script of R-package 'curl' by Jeroen Ooms
+
+# check for existing libcurl and ssl support with pkg-config
+SSL_SUPPORT=`curl-config --feature | grep SSL`
+
+
+pkg-config --version >/dev/null 2>&1
+
+# get libflags and cflags
+if [ $? -eq 0 ] && [ $SSL_SUPPORT="SSL" ]; then
+    echo "test"
+    PKGCONFIG_CFLAGS=`pkg-config --cflags libcurl`
+    case "$PKGCONFIG_CFLAGS" in
+	*CURL_STATICLIB*) PKGCONFIG_LIBS=`pkg-config --libs --static libcurl`;;
+	*) PKGCONFIG_LIBS=`pkg-config --libs libcurl`;;
+    esac
+fi
+
+# use user specified include dir and lib dir if provided
+if [ "$INCLUDE_DIR" ] || [ "$LIB_DIR" ]; then
+  echo "Found INCLUDE_DIR and/or LIB_DIR!"
+  PKG_CFLAGS="-I$INCLUDE_DIR $PKG_CFLAGS"
+  PKG_LIBS="-L$LIB_DIR $PKG_LIBS"
+elif [ "$PKGCONFIG_CFLAGS" ] || [ "$PKGCONFIG_LIBS" ]; then
+  echo "Found pkg-config cflags or libs!"
+  PKG_CFLAGS=${PKGCONFIG_CFLAGS}
+  PKG_LIBS=${PKGCONFIG_LIBS}
+fi
+
+
+# find compiler
+CC=`${R_HOME}/bin/R CMD config CC`
+CFLAGS=`${R_HOME}/bin/R CMD config CFLAGS`
+CPPFLAGS=`${R_HOME}/bin/R CMD config CPPFLAGS`
+
+# test configuration
+echo "#include <curl/curl.h>" | ${CC} ${CPPFLAGS} ${PKG_CFLAGS} ${CFLAGS} -E -xc - >/dev/null 2>&1 || R_CONFIG_ERROR=1;
+
+if [ $R_CONFIG_ERROR ]; then
+  echo "------------------------- CONFIGURATION ERROR ---------------------------"
+  echo "Configuration failed, likely because libcurl was not found. Try installing:"
+  echo " * deb: libcurl4-openssl-dev or libcurl4-gnutls-dev (Debian, Ubuntu, etc)"
+  echo " * rpm: libcurl-devel (Fedora, CentOS, RHEL)"
+  echo " * csw: libcurl_dev (Solaris)"
+  echo "If libcurl is already installed, check that 'pkg-config' is in your"
+  echo "PATH and PKG_CONFIG_PATH contains a libcurl.pc file. If pkg-config"
+  echo "is unavailable you can set INCLUDE_DIR and LIB_DIR manually via:"
+  echo "R CMD INSTALL --configure-vars='INCLUDE_DIR=... LIB_DIR=...'"
+  echo "--------------------------------------------------------------------"
+  exit 1;
+fi
+
+
+# write Makevars file
+echo "PKG_LIBS = ${PKG_CFLAGS} ${PKG_LIBS}" > src/Makevars
+
+# success
+exit 0
