@@ -42,7 +42,7 @@ settings <- list(server = "smtp.example.org",
 sendmail(from = "sender@example.org",
          to = "receiver@example.org",
          subject = "Good news!",
-         msg = message
+         msg = message,
          smtpsettings = settings,
 	 attachment = "nice_pic.jpg")
 ```
