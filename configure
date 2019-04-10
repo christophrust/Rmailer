@@ -10,7 +10,6 @@ pkg-config --version >/dev/null 2>&1
 
 # get libflags and cflags
 if [ $? -eq 0 ] && [ $SSL_SUPPORT="SSL" ]; then
-    echo "test"
     PKGCONFIG_CFLAGS=`pkg-config --cflags libcurl`
     case "$PKGCONFIG_CFLAGS" in
 	*CURL_STATICLIB*) PKGCONFIG_LIBS=`pkg-config --libs --static libcurl`;;
