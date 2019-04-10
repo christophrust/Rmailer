@@ -30,7 +30,7 @@ static size_t read_function(void *ptr, size_t size, size_t nmemb, void *userp)
 
   data = (const char *) upload_ctx->msg_with_mimeB64[upload_ctx->lines_read];
 
-  printf("Line: %s", data);
+  //printf("Line: %s", data);
   
   if(data) {
     size_t len = strlen(data);
