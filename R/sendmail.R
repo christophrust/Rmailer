@@ -35,7 +35,7 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
               } else {
                   if (port == 465) TRUE else FALSE
               }
-
+    server <- paste0(if (usessl) "smtps://" else "smtp://",server)
 
     ## build up the message
 
@@ -51,11 +51,11 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
     weekdays <- c("Mon","Tue","Wed","Thu","Fri","Sat","Sun")
     
     header <- paste0("Date: ",
-                     weekdays[as.numeric(format(currenttime,tz = "UTC", format = "%u"))], ", ",
-                     format(currenttime, tz = "UTC", format = "%d"), " ",
-                     months[as.numeric(format(currenttime, tz = "UTC", format = "%m"))]," ",
-                     format(currenttime, tz = "UTC", format = "%Y"), " ",
-                     format(currenttime, tz = "UTC",format = "%T")," ",
+                     weekdays[as.numeric(format(currenttime, format = "%u"))], ", ",
+                     format(currenttime, format = "%d"), " ",
+                     months[as.numeric(format(currenttime, format = "%m"))]," ",
+                     format(currenttime,  format = "%Y"), " ",
+                     format(currenttime, format = "%T")," ",
                      diffh, "\r\n")
     
     header <- c(header,
@@ -98,7 +98,7 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
                  verifyssl = verifyssl,
                  msg = msg,
                  nrmsg = as.integer(length(msg)),
-                 verbose = 1L,
+                 verbose = 0L,
                  PACKAGE = "Rmailer")
     res
 }
