@@ -1,1 +1,1 @@
-PKG_LIBS=-L/usr/local/lib -lcurl
+PKG_LIBS = -I/usr/include/x86_64-linux-gnu -lcurl

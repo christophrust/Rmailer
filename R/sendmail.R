@@ -6,11 +6,13 @@
 #' @param to To address
 #' @param subject subject of email.
 #' @param smtpsettings server settings for the smtp server. A list with entries
-#' \item{server}{address of smtp server, e.g. smtp.googlemail.com}
-#' \item{port}{optional port, defaults to 465 (SSL)}
-#' \item{username}{If server requires authentication, supply username}
-#' \item{passowrd}{password if required}
-#' \item{usessl}{If port is set to be different from 465 ssl will not be used by default, can be specified here optionally.}
+#' \enumerate{
+#'   \item{server}{address of smtp server, e.g. smtp.googlemail.com}
+#'   \item{port}{optional port, defaults to 465 (SSL)}
+#'   \item{username}{If server requires authentication, supply username}
+#'   \item{passowrd}{password if required}
+#'   \item{usessl}{If port is set to be different from 465 ssl will not be used by default, can be specified here optionally.}
+#' }
 #' @param msg character vector holding lines of email or character string with entire message.
 #' @param attachment optional character vector containing path of files to be attached.
 #'
@@ -21,6 +23,9 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
 
     ## currently not supported:
     cc <- NULL
+
+
+    if (length(msg) == 0) warning("Message is empty!")
     
     ## get the server information
     server <- smtpsettings[["server"]]
@@ -65,13 +70,15 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
                 paste0("Subject: ", subject, "\r\n"),
                 "MIME-Version: 1.0\r\n",
                 'Content-Type: multipart/alternative; boundary="=_boundary"\r\n')
+
     
     ## body:
     body <- c("Content-Type: text/plain; charset=utf-8\r\n",
               "Content-Transfer-Encoding: quoted-printable\r\n",
               "\r\n",
-              sapply(msg, splitText, USE.NAMES = FALSE))
-
+              do.call(c,lapply(msg, splitText)))
+    
+    
     ## attachments if supplied:
     if (!is.null(attachment)){
         attchmnts <- do.call( function(x) c("\r\n", "--=_boundary\r\n",x),
