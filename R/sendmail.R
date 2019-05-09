@@ -1,17 +1,17 @@
 #' sendmail
 #'
-#' Send e-mails from R via SMTP with authentication and encryption
+#' Send e-mails from R via SMTP with authentication and encryption.
 #'
 #' @param from From address.
 #' @param to To address
 #' @param subject subject of email.
-#' @param smtpsettings server settings for the smtp server. A list with entries
-#' \enumerate{
-#'   \item{server}{address of smtp server, e.g. smtp.googlemail.com}
-#'   \item{port}{optional port, defaults to 465 (SSL)}
-#'   \item{username}{If server requires authentication, supply username}
-#'   \item{passowrd}{password if required}
-#'   \item{usessl}{If port is set to be different from 465 ssl will not be used by default, can be specified here optionally.}
+#' @param smtpsettings server settings for the smtp server. A list with the following entries:
+#' \describe{
+#'   \item{server:}{address of smtp server, e.g. smtp.googlemail.com}
+#'   \item{port:}{optional port, defaults to 465 (SSL)}
+#'   \item{username:}{If server requires authentication, supply username}
+#'   \item{password:}{password if required}
+#'   \item{usessl:}{If port is set to be different from 465, ssl will not be used by default, can be specified here optionally.}
 #' }
 #' @param msg character vector holding lines of email or character string with entire message.
 #' @param attachment optional character vector containing path of files to be attached.

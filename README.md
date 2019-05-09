@@ -1,7 +1,7 @@
 # Rmailer
 Send mails from R via smtp with encryption and authentication
 
-## Installation
+## Installation (Linux/Mac, Windows not yet supported)
 
 Rmailer is based on libcurl. Therefore, make sure to have libcurl installed (including an ssl library).
 
@@ -47,3 +47,6 @@ sendmail(from = "sender@example.org",
 	 attachment = "nice_pic.jpg")
 ```
 
+## Windows support
+
+If this package appears to be useful for someone who is restricted to work on windows, feel free to write me an email and I will try to provide a binary for Windows.

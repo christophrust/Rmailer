@@ -15,13 +15,13 @@ sendmail(from, to, subject, msg, smtpsettings, attachment = NULL)
 
 \item{msg}{character vector holding lines of email or character string with entire message.}
 
-\item{smtpsettings}{server settings for the smtp server. A list with entries
-\enumerate{
-  \item{server}{address of smtp server, e.g. smtp.googlemail.com}
-  \item{port}{optional port, defaults to 465 (SSL)}
-  \item{username}{If server requires authentication, supply username}
-  \item{passowrd}{password if required}
-  \item{usessl}{If port is set to be different from 465 ssl will not be used by default, can be specified here optionally.}
+\item{smtpsettings}{server settings for the smtp server. A list with the following entries:
+\describe{
+  \item{server:}{address of smtp server, e.g. smtp.googlemail.com}
+  \item{port:}{optional port, defaults to 465 (SSL)}
+  \item{username:}{If server requires authentication, supply username}
+  \item{passowrd:}{password if required}
+  \item{usessl:}{If port is set to be different from 465 ssl will not be used by default, can be specified here optionally.}
 }}
 
 \item{attachment}{optional character vector containing path of files to be attached.}
