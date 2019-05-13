@@ -1,0 +1,7 @@
+ifeq "${R_ARCH}" "/x64"
+PKG_LIBS=-L${LIB_CURL}/lib${R_ARCH} -lcurl -lrtmp -lssh2 -lz -lssl -lcrypto -lgdi32 -lws2_32 -lcrypt32 -lwldap32 -lwinmm
+else
+PKG_LIBS=-L${LIB_CURL}/lib${R_ARCH} -lcurl -lrtmp -lssh2 -lz -lssl -lcrypto -lidn -lgdi32 -lws2_32 -lcrypt32 -lwldap32 -lwinmm
+endif
+
+PKG_CFLAGS= -I${LIB_CURL}/include -DCURL_STATICLIB -DSTRICT_R_HEADERS
