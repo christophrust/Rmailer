@@ -3,7 +3,7 @@
 #' Send e-mails from R via SMTP with authentication and encryption.
 #'
 #' @param from From address.
-#' @param to To address
+#' @param to To address.
 #' @param subject subject of email.
 #' @param smtpsettings server settings for the smtp server. A list with the following entries:
 #' \describe{
@@ -15,14 +15,21 @@
 #' }
 #' @param msg character vector holding lines of email or character string with entire message.
 #' @param attachment optional character vector containing path of files to be attached.
+#' @param verifycert TRUE or FALSE, indicating whether to verify certificate
+#'                   of SMTP server. On windows, this defaults to FALSE, on unix-like machines to TRUE.
+#'
+#' 
 #'
 #' @useDynLib Rmailer
 #' @export
-sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
+sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
+                     verifycert  = if(.Platform$OS.type == "unix") TRUE else FALSE{
 
 
     ## currently not supported:
     cc <- NULL
+    
+    verifycert <- as.integer(verifycert)
 
 
     if (length(msg) == 0) warning("Message is empty!")
@@ -32,7 +39,7 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
     username <- smtpsettings[["username"]]
     password <- smtpsettings[["password"]]
     useauth <- if (is.null(username)) 0L else 1L
-    verifyssl <- 1L
+
     port <- if (!is.null(smtpsettings[["port"]]))
                 smtpsettings[["port"]] else 465
     usessl <- if (!is.null(smtpsettings[["port"]])) {
@@ -102,7 +109,7 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL){
                  server = as.character(server),
                  useauth = useauth,
                  usessl = as.integer(usessl),
-                 verifyssl = verifyssl,
+                 verifyssl = verifycert,
                  msg = msg,
                  nrmsg = as.integer(length(msg)),
                  verbose = 0L,

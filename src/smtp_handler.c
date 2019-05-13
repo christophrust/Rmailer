@@ -17,7 +17,7 @@ struct upload_data_status {
 
 
 
-/* callback function reading data from an above struct */
+/* callback function reading data from the above struct upload_data_status */
 static size_t read_function(void *ptr, size_t size, size_t nmemb, void *userp)
 {
   struct upload_data_status *upload_ctx = (struct upload_data_status *)userp;
@@ -55,14 +55,13 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
   SEXP res;
   PROTECT(res = allocVector(INTSXP, 1));
   
-  /* get stuff from R objects */
+  /* copy pointers from R objects */
   const char *fromaddr = CHAR(STRING_ELT(from, 0));
   const char *toaddr = CHAR(STRING_ELT(to, 0));
   const char *username = CHAR(STRING_ELT(user, 0));
   const char *passwordp = CHAR(STRING_ELT(password, 0));
   const char *servername = CHAR(STRING_ELT(server, 0));
   const int *iuseauth = INTEGER(useauth);
-  const int *iusessl = INTEGER(usessl);
   
   const int *incmsg = INTEGER(ncmsg);
   const int *iverifyssl = INTEGER(verifyssl);
@@ -86,7 +85,7 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
   upload_ctx.msg_with_mimeB64 = msg_with_mimeB64;
     
   curl = curl_easy_init();
-
+  
   
   if(curl) {
     /* Set username and password */ 
@@ -129,8 +128,8 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
  
     /* Check for errors */ 
     if(crl_res != CURLE_OK)
-      fprintf(stderr, "curl_easy_perform() failed: %s\n",
-              curl_easy_strerror(crl_res));
+      error("curl_easy_perform() failed: %s\n",
+	    curl_easy_strerror(crl_res));
     
     /* Free the list of recipients */ 
     curl_slist_free_all(recipients);
@@ -143,4 +142,15 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
   INTEGER(res)[0] = (int) crl_res;
   UNPROTECT(1);
   return res;
+}
+
+
+static const R_CallMethodDef CallEntries[] = {
+    {"send_email", (DL_FUNC) &send_email, 11},
+    {NULL, NULL, 0}
+};
+
+void R_init_Rmailer(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

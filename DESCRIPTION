@@ -1,9 +1,10 @@
 Package: Rmailer
-Version: 0.1
-Title: Very simple SMTP client for R with SSL encryption and authentication
-Description: I use this to automatically send emails to the students, myself...
+Version: 0.2
+Title: Very Simple SMTP Client for R Featuring Encryption and Authentication
+Description: I use this to automatically send emails to students,
+   notifications to myself...
 Author: Christoph Rust [aut,cre]
 Maintainer: Christoph Rust <christoph.g.rust@gmail.com>
 Depends: R (>= 3.0.0), base64enc (>= 0.1-3)
-License: GPL-3
+License: GPL-3 + file LICENSE
 RoxygenNote: 6.1.0
