@@ -1,7 +1,8 @@
 # Rmailer
 Send mails from R via smtp with encryption and authentication
 
-## Installation
+
+## Prerequisites
 
 ### Linux/Mac
 
@@ -17,6 +18,8 @@ to install libcurl with GNU TLS support. Other SSL/TLS libraries will also work.
 
 [Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required to build the package.
 
+
+## Installation
 
 After having gone through the steps above, the package can be installed as follows from R console:
 
