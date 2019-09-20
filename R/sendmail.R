@@ -23,7 +23,7 @@
 #' @useDynLib Rmailer
 #' @export
 sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
-                     verifycert  = if(.Platform$OS.type == "unix") TRUE else FALSE{
+                     verifycert  = if(.Platform$OS.type == "unix") TRUE else FALSE ){
 
 
     ## currently not supported:
