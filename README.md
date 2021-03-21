@@ -16,7 +16,9 @@ to install libcurl with GNU TLS support. Other SSL/TLS libraries will also work.
 
 ### Windows
 
-[Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required to build the package.
+[Rtools](https://cran.r-project.org/bin/windows/Rtools/) is required to build the package from source. 
+
+A prebuilt binary (thanks to [win-builder](https://win-builder.r-project.org/)) is also available [here](https://christophrust.de/rpkg/Rmailer_0.2.zip).
 
 
 ## Installation
