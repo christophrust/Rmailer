@@ -46,9 +46,9 @@ static size_t read_function(void *ptr, size_t size, size_t nmemb, void *userp)
 
 
 /* send function */
-SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
-		SEXP server, SEXP useauth, SEXP usessl, SEXP verifyssl,
-		SEXP msg, SEXP ncmsg, SEXP verbose)
+SEXP send_email(SEXP from, SEXP to, SEXP nto, SEXP user, SEXP password,
+                SEXP server, SEXP useauth, SEXP usessl, SEXP verifyssl,
+                SEXP msg, SEXP ncmsg, SEXP verbose)
 {
   
   /* return code */
@@ -57,7 +57,6 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
   
   /* copy pointers from R objects */
   const char *fromaddr = CHAR(STRING_ELT(from, 0));
-  const char *toaddr = CHAR(STRING_ELT(to, 0));
   const char *username = CHAR(STRING_ELT(user, 0));
   const char *passwordp = CHAR(STRING_ELT(password, 0));
   const char *servername = CHAR(STRING_ELT(server, 0));
@@ -107,9 +106,14 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
 
     curl_easy_setopt(curl, CURLOPT_MAIL_FROM, fromaddr);
     
-    /* recipient. */ 
-    recipients = curl_slist_append(recipients, toaddr);
+    /* recipient. */
+    const char *toaddr;
+    for (int i = 0; i < *INTEGER(nto); i++){
+      toaddr = CHAR(STRING_ELT(to, i));
+      recipients = curl_slist_append(recipients, toaddr);
+    }
     curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
+
  
     /* specify callback function */
     curl_easy_setopt(curl, CURLOPT_READFUNCTION, read_function);
@@ -146,7 +150,7 @@ SEXP send_email(SEXP from, SEXP to, SEXP user, SEXP password,
 
 
 static const R_CallMethodDef CallEntries[] = {
-    {"send_email", (DL_FUNC) &send_email, 11},
+    {"send_email", (DL_FUNC) &send_email, 12},
     {NULL, NULL, 0}
 };
 
