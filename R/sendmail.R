@@ -69,14 +69,17 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
                      format(currenttime,  format = "%Y"), " ",
                      format(currenttime, format = "%T")," ",
                      diffh, "\r\n")
-    
+
+  boundary_string <- paste0("=-",
+                            paste0(c(LETTERS, letters, 0:9)[sample(1:62, size = 20)], collapse = ""))
+
     header <- c(header,
                 paste0("To: ", to, "\r\n"),
                 paste0("From: ", from, "\r\n"),
                 paste0("Cc: ", cc, "\r\n"),
                 paste0("Subject: ", subject, "\r\n"),
                 "MIME-Version: 1.0\r\n",
-                'Content-Type: multipart/alternative; boundary="=_boundary"\r\n')
+                'Content-Type: multipart/mixed; boundary="',boundary_string ,'"\r\n')
 
     
     ## body:
@@ -85,21 +88,25 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
               "\r\n",
               do.call(c,lapply(msg, splitText)))
     
-    
+
     ## attachments if supplied:
     if (!is.null(attachment)){
-        attchmnts <- do.call( function(x) c("\r\n", "--=_boundary\r\n",x),
-                             lapply(attachment, attachment2mime))
-        
+      attchmnts <- do.call(what = function(x) {
+        c("\r\n", paste0("--", boundary_string, "\r\n"), x)
+      },
+      args = lapply(attachment, attachment2mime))
+
     }
 
+
     msg <- c(header, "\r\n",
-             "--=_boundary\r\n",
+             paste0("--", boundary_string, "\r\n"),
              body,
              if (is.null(attachment)) NULL else  attchmnts,
              "\r\n",
-             "--=_boundary--")
-    
+             "\r\n",
+             paste0("--", boundary_string, "--\r\n"))
+
     
     res <- .Call("send_email",
                  from = as.character(from) ,
