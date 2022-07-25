@@ -47,7 +47,7 @@ static size_t read_function(void *ptr, size_t size, size_t nmemb, void *userp)
 
 /* send function */
 SEXP send_email(SEXP from, SEXP to, SEXP nto, SEXP user, SEXP password,
-                SEXP server, SEXP useauth, SEXP usessl, SEXP verifyssl,
+                SEXP server, SEXP useauth, SEXP usessl, SEXP usetls, SEXP verifyssl,
                 SEXP msg, SEXP ncmsg, SEXP verbose)
 {
   
@@ -61,6 +61,7 @@ SEXP send_email(SEXP from, SEXP to, SEXP nto, SEXP user, SEXP password,
   const char *passwordp = CHAR(STRING_ELT(password, 0));
   const char *servername = CHAR(STRING_ELT(server, 0));
   const int *iuseauth = INTEGER(useauth);
+  const int *iusetls = INTEGER(usetls);
   
   const int *incmsg = INTEGER(ncmsg);
   const int *iverifyssl = INTEGER(verifyssl);
@@ -88,6 +89,10 @@ SEXP send_email(SEXP from, SEXP to, SEXP nto, SEXP user, SEXP password,
   
   if(curl) {
     /* Set username and password */ 
+
+    if (*iusetls) {
+       curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
+    }
 
     if (*iuseauth){
       curl_easy_setopt(curl, CURLOPT_USERNAME, username);

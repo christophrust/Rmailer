@@ -8,10 +8,10 @@
 #' @param smtpsettings server settings for the smtp server. A list with the following entries:
 #' \describe{
 #'   \item{server:}{address of smtp server, e.g. smtp.googlemail.com}
-#'   \item{port:}{optional port, defaults to 465 (SSL)}
+#'   \item{port:}{optional port, defaults to 587 (SSL)}
 #'   \item{username:}{If server requires authentication, supply username}
 #'   \item{password:}{password if required}
-#'   \item{usessl:}{If port is set to be different from 465, ssl will not be used by default, can be specified here optionally.}
+#'   \item{usessl:}{If port is set to be different from 587, ssl will not be used by default, can be specified here optionally.}
 #' }
 #' @param msg character vector holding lines of email or character string with entire message.
 #' @param attachment optional character vector containing path of files to be attached.
@@ -23,7 +23,8 @@
 #' @useDynLib Rmailer
 #' @export
 sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
-                     verifycert  = if(.Platform$OS.type == "unix") TRUE else FALSE ){
+                     verifycert  = if(.Platform$OS.type == "unix") TRUE else FALSE,
+                     verbose = 0L){
 
 
     ## currently not supported:
@@ -41,13 +42,19 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
     useauth <- if (is.null(username)) 0L else 1L
 
     port <- if (!is.null(smtpsettings[["port"]]))
-                smtpsettings[["port"]] else 465
-    usessl <- if (!is.null(smtpsettings[["port"]])) {
-                  smtpsettings[["port"]]
+                smtpsettings[["port"]] else 587
+    usessl <- if (!is.null(smtpsettings[["usessl"]])) {
+                smtpsettings[["usessl"]]
               } else {
-                  if (port == 465) TRUE else FALSE
+                if (port == 465) TRUE else FALSE
               }
-    server <- paste0(if (usessl) "smtps://" else "smtp://",server)
+  usetls <- if (!is.null(smtpsettings[["usetls"]])) {
+              smtpsettings[["usetls"]]
+            } else {
+              if (port == 587) TRUE else FALSE
+            }
+
+  server <- paste0(if (usessl) "stmps://" else "smtp://", server, ":", port)
 
     ## build up the message
 
@@ -117,10 +124,11 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
                  server = as.character(server),
                  useauth = useauth,
                  usessl = as.integer(usessl),
+                 usetls = as.integer(usetls),
                  verifyssl = verifycert,
                  msg = msg,
                  nrmsg = as.integer(length(msg)),
-                 verbose = 0L,
+                 verbose = as.integer(verbose),
                  PACKAGE = "Rmailer")
     res
 }
