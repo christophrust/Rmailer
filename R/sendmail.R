@@ -54,7 +54,7 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
               if (port == 587) TRUE else FALSE
             }
 
-  server <- paste0(if (usessl) "stmps://" else "smtp://", server, ":", port)
+  server <- paste0(if (usessl && !usetls) "smtps://" else "smtp://", server, ":", port)
 
     ## build up the message
 
