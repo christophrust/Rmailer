@@ -155,7 +155,7 @@ SEXP send_email(SEXP from, SEXP to, SEXP nto, SEXP user, SEXP password,
 
 
 static const R_CallMethodDef CallEntries[] = {
-    {"send_email", (DL_FUNC) &send_email, 12},
+    {"send_email", (DL_FUNC) &send_email, 13},
     {NULL, NULL, 0}
 };
 
