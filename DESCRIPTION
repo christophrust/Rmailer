@@ -1,5 +1,5 @@
 Package: Rmailer
-Version: 0.2.1
+Version: 0.2.2
 Title: Very Simple SMTP Client for R Featuring Encryption and Authentication
 Description: I use this to automatically send emails to students,
    notifications to myself...
