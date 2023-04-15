@@ -81,7 +81,7 @@ sendmail <- function(from, to, subject, msg, smtpsettings, attachment = NULL,
                             paste0(c(LETTERS, letters, 0:9)[sample(1:62, size = 20)], collapse = ""))
 
     header <- c(header,
-                paste0("To: ", to, "\r\n"),
+                paste0("To: ", paste(to, collapse = ", "), "\r\n"),
                 paste0("From: ", from, "\r\n"),
                 paste0("Cc: ", cc, "\r\n"),
                 paste0("Subject: ", subject, "\r\n"),
